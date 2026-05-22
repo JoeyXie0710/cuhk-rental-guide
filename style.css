@@ -1,0 +1,233 @@
+/* style.css — CUHK 租房攻略地圖樣式 v2 */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang HK", "Noto Sans HK", sans-serif;
+  background: #f0f2f5; color: #333; height: 100vh; overflow: hidden;
+}
+
+#app { display: flex; flex-direction: column; height: 100vh; }
+
+/* ======== Header ======== */
+#header {
+  display: flex; align-items: center; gap: 16px; padding: 10px 20px;
+  background: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.08); z-index: 1000; flex-shrink: 0;
+}
+
+#title { font-size: 20px; font-weight: 700; white-space: nowrap; color: #1a1a2e; }
+
+#search-container { position: relative; flex: 1; max-width: 480px; }
+
+#search-input {
+  width: 100%; padding: 10px 16px; border: 2px solid #e0e0e0; border-radius: 8px;
+  font-size: 15px; font-family: inherit; outline: none; background: #f8f9fa;
+  transition: border-color 0.2s;
+}
+#search-input:focus { border-color: #3498db; background: #fff; }
+
+#search-dropdown {
+  display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff;
+  border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-height: 360px; overflow-y: auto; z-index: 2000;
+}
+
+.search-group-label {
+  padding: 6px 14px; font-size: 11px; color: #999; background: #f8f9fa;
+}
+.search-item {
+  padding: 10px 14px; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; border-bottom: 1px solid #f0f0f0;
+}
+.search-item:hover, .search-item.active { background: #eef5fb; }
+.search-item.no-result { color: #999; cursor: default; justify-content: center; }
+.search-item-name { font-weight: 600; }
+.search-item-en { font-size: 12px; color: #888; }
+
+/* ======== Main ======== */
+#main { display: flex; flex: 1; overflow: hidden; }
+
+#map-container { flex: 1; position: relative; min-width: 0; }
+#map { width: 100%; height: 100%; }
+
+/* ======== POI Toggles ======== */
+#poi-toggles {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; background: rgba(255,255,255,0.95); padding: 8px 14px;
+  border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1000;
+  flex-wrap: wrap; justify-content: center;
+}
+.poi-toggle {
+  display: flex; align-items: center; gap: 4px; font-size: 13px; cursor: pointer;
+  padding: 4px 10px; border-radius: 6px; white-space: nowrap; transition: background 0.2s;
+}
+.poi-toggle:hover { background: #f0f0f0; }
+.poi-toggle input { cursor: pointer; }
+
+/* ======== Info Panel ======== */
+#info-panel {
+  width: 400px; background: #fff; overflow-y: auto;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.06); padding: 20px; flex-shrink: 0; z-index: 500;
+}
+
+#default-info h2 { font-size: 18px; margin-bottom: 12px; color: #1a1a2e; }
+#default-info > p { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 16px; }
+
+#area-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.area-card {
+  padding: 14px; border: 2px solid #e8e8e8; border-radius: 10px; cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.area-card:hover { border-color: #3498db; box-shadow: 0 2px 8px rgba(52,152,219,0.15); }
+.area-card h3 { font-size: 15px; margin-bottom: 4px; }
+.area-card p { font-size: 13px; color: #555; margin-bottom: 2px; }
+.area-hint { font-size: 12px !important; color: #3498db !important; margin-top: 4px !important; }
+
+#default-legend { display: flex; gap: 16px; font-size: 12px; color: #777; padding-top: 12px; border-top: 1px solid #eee; flex-wrap: wrap; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.legend-dot.mtr { background: #e74c3c; }
+.legend-dot.cuhk { background: #f39c12; }
+.legend-dot.estate { background: #3498db; }
+.legend-dot.poi { background: #e91e63; }
+
+/* ======== 按鈕 ======== */
+#btn-back {
+  background: none; border: 1px solid #ddd; padding: 6px 14px; border-radius: 6px;
+  font-size: 13px; cursor: pointer; color: #555; margin-bottom: 12px; font-family: inherit;
+  transition: background 0.2s;
+}
+#btn-back:hover { background: #f5f5f5; }
+
+#estate-name { font-size: 20px; margin-bottom: 6px; color: #1a1a2e; }
+#estate-notes { font-size: 14px; color: #666; margin-bottom: 14px; line-height: 1.5; padding: 10px; background: #f8f9fa; border-radius: 8px; }
+
+/* ======== 折疊面板 ======== */
+.accordion-section {
+  border: 1px solid #e8e8e8; border-radius: 10px; margin-bottom: 12px; overflow: hidden;
+}
+
+.accordion-header {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  background: #f8f9fa; cursor: pointer; user-select: none;
+  transition: background 0.15s;
+}
+.accordion-header:hover { background: #eef2f7; }
+
+.accordion-icon {
+  font-size: 10px; color: #888; flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.accordion-section.open > .accordion-header .accordion-icon { transform: rotate(90deg); }
+
+.accordion-title { font-size: 14px; font-weight: 600; color: #333; flex: 1; }
+
+.accordion-badge {
+  font-size: 11px; font-weight: 600; color: #3498db; background: #e8f4fd;
+  padding: 3px 10px; border-radius: 12px; white-space: nowrap;
+}
+
+.accordion-body { display: none; padding: 4px 0; }
+.accordion-section.open > .accordion-body { display: block; }
+
+/* ======== 子折疊面板 ======== */
+.sub-accordion {
+  border-top: 1px solid #f0f0f0; margin: 0 14px;
+}
+
+.sub-accordion-header {
+  display: flex; align-items: center; gap: 6px; padding: 10px 4px;
+  cursor: pointer; user-select: none; font-size: 13px; color: #555;
+  transition: color 0.15s;
+}
+.sub-accordion-header:hover { color: #3498db; }
+
+.sub-accordion-icon {
+  font-size: 8px; color: #aaa; flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.sub-accordion.open > .sub-accordion-header .sub-accordion-icon { transform: rotate(90deg); }
+
+.sub-accordion-body { display: none; padding: 4px 4px 10px 20px; }
+.sub-accordion.open > .sub-accordion-body { display: block; }
+
+/* ======== 路線項目 ======== */
+.route-item {
+  display: flex; align-items: flex-start; gap: 8px; margin-bottom: 4px;
+  font-size: 13px; line-height: 1.5;
+}
+.route-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.route-text strong { color: #2c3e50; }
+
+.route-summary {
+  margin-top: 6px; padding: 8px 12px; background: #e8f4fd; border-radius: 6px;
+  font-size: 13px; color: #2471a3;
+}
+.route-note { font-size: 12px; color: #888; font-style: italic; margin-top: 4px; }
+
+/* ======== 巴士卡片 ======== */
+.bus-card {
+  background: #f8f9fa; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+  border-left: 3px solid #3498db;
+}
+.bus-route-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+}
+.bus-route-num {
+  display: inline-block; background: #3498db; color: #fff; font-size: 13px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px; min-width: 36px; text-align: center;
+}
+.bus-type { font-size: 12px; color: #777; }
+.bus-detail {
+  display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; margin-bottom: 2px; flex-wrap: wrap;
+}
+.bus-detail strong { color: #333; }
+
+/* ======== 周邊配套 ======== */
+.nearby-cat { font-size: 13px; margin-bottom: 4px; line-height: 1.5; }
+.nearby-cat-name { font-weight: 600; color: #555; margin-right: 4px; }
+
+/* ======== Footer ======== */
+#footer {
+  padding: 8px 20px; background: #fff; font-size: 11px; color: #999;
+  display: flex; justify-content: space-between; border-top: 1px solid #eee; flex-shrink: 0;
+}
+
+/* ======== 自訂標記 ======== */
+.custom-marker { background: transparent !important; border: none !important; }
+
+/* 小區標記 */
+.estate-marker {
+  width: 26px; height: 26px; border-radius: 50%; background: #3498db;
+  color: #fff; font-size: 12px; font-weight: 700; display: flex;
+  align-items: center; justify-content: center; border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* POI 水滴標記 */
+.poi-pin { background: transparent !important; border: none !important; }
+.poi-pin svg { filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+
+/* ======== 響應式 ======== */
+@media (max-width: 768px) {
+  #header { padding: 8px 12px; gap: 10px; }
+  #title { font-size: 16px; }
+  #search-container { max-width: none; }
+  #search-input { font-size: 14px; padding: 8px 12px; }
+
+  #main { flex-direction: column; }
+  #map-container { height: 50%; flex: none; }
+  #info-panel { width: 100%; height: 50%; flex: none; box-shadow: 0 -2px 8px rgba(0,0,0,0.06); padding: 14px; }
+
+  #poi-toggles { bottom: 8px; padding: 5px 8px; gap: 2px; }
+  .poi-toggle { font-size: 11px; padding: 3px 7px; }
+
+  #area-cards { flex-direction: row; overflow-x: auto; gap: 8px; }
+  .area-card { min-width: 150px; flex-shrink: 0; }
+}
+
+@media (max-width: 480px) {
+  #title { font-size: 14px; }
+  #poi-toggles { gap: 1px; padding: 4px 6px; }
+  .poi-toggle { font-size: 10px; padding: 2px 5px; }
+  #info-panel { padding: 10px; }
+}
