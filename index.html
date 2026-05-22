@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CUHK 租房攻略 - 沙田/火炭/大圍</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- 頂欄 -->
+    <header id="header">
+      <h1 id="title">CUHK 租房攻略</h1>
+      <div id="search-container">
+        <input type="text" id="search-input" placeholder="輸入小區名稱，如：名城、沙田第一城..." autocomplete="off" />
+        <div id="search-dropdown"></div>
+      </div>
+    </header>
+
+    <!-- 主體：地圖 + 資訊面板 -->
+    <main id="main">
+      <div id="map-container">
+        <div id="map"></div>
+        <!-- POI 圖層開關 -->
+        <div id="poi-toggles">
+          <label class="poi-toggle" data-category="mall"><input type="checkbox" checked /> 商場</label>
+          <label class="poi-toggle" data-category="market"><input type="checkbox" checked /> 街市</label>
+          <label class="poi-toggle" data-category="supermarket"><input type="checkbox" checked /> 超市</label>
+          <label class="poi-toggle" data-category="restaurant"><input type="checkbox" /> 餐飲</label>
+          <label class="poi-toggle" data-category="clinic"><input type="checkbox" /> 診所</label>
+          <label class="poi-toggle" data-category="bank"><input type="checkbox" checked /> 銀行</label>
+          <label class="poi-toggle" data-category="hospital"><input type="checkbox" /> 醫院</label>
+        </div>
+      </div>
+
+      <!-- 右側資訊面板 -->
+      <aside id="info-panel">
+
+        <!-- 默認總覽 -->
+        <div id="default-info">
+          <h2>📍 租房區域概覽</h2>
+          <p>本攻略涵蓋東鐵線三大熱門租房區域：<strong>沙田、火炭、大圍</strong>，均位於香港中文大學（大學站）以南，東鐵線直達無需轉車。</p>
+          <div id="area-cards">
+            <div class="area-card" data-area="shatin">
+              <h3>🚇 沙田站</h3>
+              <p>到中大：<strong>約5分鐘</strong>（2站）</p>
+              <p>大型商場集中，生活配套最完善</p>
+              <p class="area-hint">點擊查看沙田區小區 →</p>
+            </div>
+            <div class="area-card" data-area="fotan">
+              <h3>🚇 火炭站</h3>
+              <p>到中大：<strong>約3分鐘</strong>（1站）</p>
+              <p>離中大最近，環境清靜</p>
+              <p class="area-hint">點擊查看火炭區小區 →</p>
+            </div>
+            <div class="area-card" data-area="taiwai">
+              <h3>🚇 大圍站</h3>
+              <p>到中大：<strong>約8分鐘</strong>（3站）</p>
+              <p>租金相對親民，選擇多</p>
+              <p class="area-hint">點擊查看大圍區小區 →</p>
+            </div>
+          </div>
+          <div id="default-legend">
+            <div><span class="legend-dot mtr"></span> 地鐵站</div>
+            <div><span class="legend-dot cuhk"></span> 大學站 (CUHK)</div>
+            <div><span class="legend-dot estate"></span> 小區</div>
+            <div><span class="legend-dot poi"></span> 生活配套</div>
+          </div>
+        </div>
+
+        <!-- 小區詳情（三段折疊面板） -->
+        <div id="estate-detail" style="display:none;">
+          <button id="btn-back">← 返回總覽</button>
+          <h2 id="estate-name"></h2>
+          <p id="estate-notes"></p>
+
+          <!-- Section 1: 到最近地鐵站 -->
+          <div class="accordion-section open">
+            <div class="accordion-header" data-section="to-mtr">
+              <span class="accordion-icon">▶</span>
+              <span class="accordion-title">🚇 到最近地鐵站</span>
+              <span class="accordion-badge" id="badge-to-mtr"></span>
+            </div>
+            <div class="accordion-body" id="body-to-mtr">
+              <div class="sub-accordion open">
+                <div class="sub-accordion-header" data-sub="walk-mtr">
+                  <span class="sub-accordion-icon">▶</span><span>🚶 步行</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-walk-mtr"></div>
+              </div>
+              <div class="sub-accordion">
+                <div class="sub-accordion-header" data-sub="bus-mtr">
+                  <span class="sub-accordion-icon">▶</span><span>🚌 巴士</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-bus-mtr"></div>
+              </div>
+              <div class="sub-accordion">
+                <div class="sub-accordion-header" data-sub="drive-mtr">
+                  <span class="sub-accordion-icon">▶</span><span>🚗 駕車</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-drive-mtr"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: 到香港中文大學 -->
+          <div class="accordion-section open">
+            <div class="accordion-header" data-section="to-cuhk">
+              <span class="accordion-icon">▶</span>
+              <span class="accordion-title">🎓 到香港中文大學</span>
+              <span class="accordion-badge" id="badge-to-cuhk"></span>
+            </div>
+            <div class="accordion-body" id="body-to-cuhk">
+              <div class="sub-accordion">
+                <div class="sub-accordion-header" data-sub="walk-cuhk">
+                  <span class="sub-accordion-icon">▶</span><span>🚶 步行</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-walk-cuhk"></div>
+              </div>
+              <div class="sub-accordion open">
+                <div class="sub-accordion-header" data-sub="bus-cuhk">
+                  <span class="sub-accordion-icon">▶</span><span>🚌 巴士 / MTR</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-bus-cuhk"></div>
+              </div>
+              <div class="sub-accordion">
+                <div class="sub-accordion-header" data-sub="drive-cuhk">
+                  <span class="sub-accordion-icon">▶</span><span>🚗 駕車</span>
+                </div>
+                <div class="sub-accordion-body" id="sub-drive-cuhk"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: 周邊配套 -->
+          <div class="accordion-section open">
+            <div class="accordion-header" data-section="nearby">
+              <span class="accordion-icon">▶</span>
+              <span class="accordion-title">🏪 周邊配套 (1km範圍)</span>
+            </div>
+            <div class="accordion-body" id="body-nearby">
+              <div id="nearby-list"></div>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+
+    <footer id="footer">
+      <span>資料來源：OpenStreetMap | 通勤時間僅供參考 | 巴士路線來自KMB/小巴資訊</span>
+      <span id="last-updated"></span>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/routing.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
